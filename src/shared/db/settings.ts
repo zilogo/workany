@@ -241,86 +241,8 @@ export interface Settings {
 // ============================================================================
 
 // Default providers with full configuration
-export const defaultProviders: AIProvider[] = [
-  {
-    id: 'openrouter',
-    name: 'OpenRouter',
-    apiKey: '',
-    baseUrl: 'https://openrouter.ai/api',
-    enabled: true,
-    models: ['anthropic/claude-sonnet-4.5', 'anthropic/claude-opus-4.5'],
-    icon: 'O',
-    apiKeyUrl: 'https://openrouter.ai/keys',
-    canDelete: true,
-  },
-  {
-    id: 'minimax',
-    name: 'MiniMax',
-    apiKey: '',
-    baseUrl: 'https://api.minimax.io/anthropic',
-    enabled: true,
-    models: ['MiniMax-M2.1'],
-    icon: 'M',
-    apiKeyUrl:
-      'https://platform.minimax.io/subscribe/coding-plan?code=9hgHKlPO3G&source=link',
-    canDelete: true,
-  },
-  {
-    id: 'zai',
-    name: 'Z.ai',
-    apiKey: '',
-    baseUrl: 'https://api.z.ai/api/anthropic',
-    enabled: true,
-    models: ['glm-4.7'],
-    icon: 'Z',
-    apiKeyUrl: 'https://z.ai/subscribe?ic=7YS469UOXD',
-    canDelete: true,
-  },
-  {
-    id: 'volcengine',
-    name: 'Volcengine',
-    apiKey: '',
-    baseUrl: 'https://ark.cn-beijing.volces.com/api/coding',
-    enabled: true,
-    models: ['ark-code-latest'],
-    icon: 'V',
-    apiKeyUrl: 'https://volcengine.com/L/Sq5rSgyFu_E',
-    canDelete: true,
-  },
-  {
-    id: '302ai',
-    name: '302.AI',
-    apiKey: '',
-    baseUrl: 'https://api.302.ai/cc',
-    enabled: true,
-    models: ['claude-sonnet-4-5-20250929'],
-    icon: '3',
-    apiKeyUrl: 'https://302.ai/?utm_source=workany_desktop',
-    canDelete: true,
-  },
-  {
-    id: 'ollama',
-    name: 'Ollama',
-    apiKey: '',
-    baseUrl: 'http://localhost:11434',
-    enabled: true,
-    models: ['glm-4.7-flash'],
-    icon: 'O',
-    apiKeyUrl: 'https://docs.ollama.com/integrations/claude-code',
-    canDelete: true,
-  },
-  {
-    id: 'siliconflow',
-    name: 'SiliconFlow',
-    apiKey: '',
-    baseUrl: 'https://api.siliconflow.com/',
-    enabled: true,
-    models: ['MiniMaxAI/MiniMax-M2.1', 'zai-org/GLM-4.7'],
-    icon: 'S',
-    apiKeyUrl: 'https://cloud.siliconflow.com/me/account/ak',
-    canDelete: true,
-  },
-];
+// All built-in providers have been removed - users can add custom providers
+export const defaultProviders: AIProvider[] = [];
 
 // Default provider IDs that cannot be deleted (derived from defaultProviders)
 export const defaultProviderIds = defaultProviders
@@ -345,34 +267,10 @@ export const customProviderModels: Record<string, string[]> = {
     'doubao-1-5-lite-32k-250115',
     'deepseek-v3-250324',
   ],
-  volcengine: [
-    'doubao-1-5-pro-256k-250115',
-    'doubao-1-5-lite-32k-250115',
-    'deepseek-v3-250324',
-  ],
   deepseek: ['deepseek-chat', 'deepseek-coder', 'deepseek-reasoner'],
   moonshot: ['moonshot-v1-8k', 'moonshot-v1-32k', 'moonshot-v1-128k'],
   zhipu: ['glm-4-plus', 'glm-4-flash', 'glm-4-long'],
   qwen: ['qwen-max', 'qwen-plus', 'qwen-turbo'],
-  siliconflow: [
-    'deepseek-ai/DeepSeek-V3',
-    'deepseek-ai/DeepSeek-V3.1-Terminus',
-    'deepseek-ai/DeepSeek-V3.2',
-    'deepseek-ai/DeepSeek-R1',
-    'Pro/deepseek-ai/DeepSeek-V3',
-    'Pro/deepseek-ai/DeepSeek-V3.1-Terminus',
-    'Pro/deepseek-ai/DeepSeek-V3.2',
-    'Pro/deepseek-ai/DeepSeek-R1',
-    'Qwen/Qwen3-235B-A22B-Instruct-2507',
-    'Qwen/Qwen3-235B-A22B-Thinking-2507',
-    'Qwen/Qwen3-Coder-480B-A35B-Instruct',
-    'moonshotai/Kimi-K2-Instruct-0905',
-    'moonshotai/Kimi-K2-Thinking',
-    'Pro/moonshotai/Kimi-K2-Instruct-0905',
-    'Pro/moonshotai/Kimi-K2-Thinking',
-    'Pro/MiniMaxAI/MiniMax-M2.1',
-    'Pro/zai-org/GLM-4.7',
-  ],
 };
 
 // Default settings
@@ -485,6 +383,19 @@ export async function getSettingsAsync(): Promise<Settings> {
             // Skip invalid JSON values
           }
         }
+        // Migration: Remove old built-in providers that are no longer in defaultProviders
+        const oldBuiltInProviderIds = [
+          'openrouter',
+          'minimax',
+          'zai',
+          'volcengine',
+          '302ai',
+          'ollama',
+          'siliconflow',
+        ];
+        settings.providers = settings.providers.filter(
+          (p) => !oldBuiltInProviderIds.includes(p.id)
+        );
         // Migration: Add missing default providers
         for (const defaultProvider of defaultProviders) {
           if (!settings.providers.find((p) => p.id === defaultProvider.id)) {
@@ -515,6 +426,19 @@ export async function getSettingsAsync(): Promise<Settings> {
     const stored = localStorage.getItem('workany_settings');
     if (stored) {
       const loadedSettings = { ...defaultSettings, ...JSON.parse(stored) };
+      // Migration: Remove old built-in providers that are no longer in defaultProviders
+      const oldBuiltInProviderIds = [
+        'openrouter',
+        'minimax',
+        'zai',
+        'volcengine',
+        '302ai',
+        'ollama',
+        'siliconflow',
+      ];
+      loadedSettings.providers = loadedSettings.providers.filter(
+        (p: AIProvider) => !oldBuiltInProviderIds.includes(p.id)
+      );
       // Migration: Add missing default providers
       for (const defaultProvider of defaultProviders) {
         if (
@@ -561,6 +485,19 @@ export function getSettings(): Settings {
     const stored = localStorage.getItem('workany_settings');
     if (stored) {
       const loadedSettings = { ...defaultSettings, ...JSON.parse(stored) };
+      // Migration: Remove old built-in providers that are no longer in defaultProviders
+      const oldBuiltInProviderIds = [
+        'openrouter',
+        'minimax',
+        'zai',
+        'volcengine',
+        '302ai',
+        'ollama',
+        'siliconflow',
+      ];
+      loadedSettings.providers = loadedSettings.providers.filter(
+        (p: AIProvider) => !oldBuiltInProviderIds.includes(p.id)
+      );
       // Migration: Add missing default providers
       for (const defaultProvider of defaultProviders) {
         if (
