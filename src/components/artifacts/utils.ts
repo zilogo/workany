@@ -5,6 +5,57 @@ import type { Artifact } from './types';
 // Max file size for preview (50MB)
 export const MAX_PREVIEW_SIZE = 50 * 1024 * 1024;
 
+// Check if running in Tauri environment
+export function isTauriEnvironment(): boolean {
+  return typeof window !== 'undefined' && '__TAURI__' in window;
+}
+
+// Read file using API (for web version)
+export async function readFileViaAPI(path: string): Promise<Uint8Array> {
+  const response = await fetch(`${API_BASE_URL}/files/read-binary`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to read file');
+  }
+
+  const data = await response.json();
+  if (!data.success) {
+    throw new Error(data.error || 'Failed to read file');
+  }
+
+  // Convert base64 to Uint8Array
+  const binaryString = atob(data.content);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+// Get file stats using API (for web version)
+export async function statFileViaAPI(path: string): Promise<{ size: number; exists: boolean }> {
+  const response = await fetch(`${API_BASE_URL}/files/stat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to get file stats');
+  }
+
+  const data = await response.json();
+  return {
+    exists: data.exists || false,
+    size: data.size || 0,
+  };
+}
+
 // Format file size for display
 export function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;

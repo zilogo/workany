@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
-import { readFile, stat } from '@tauri-apps/plugin-fs';
 import { FileText, Loader2 } from 'lucide-react';
 
 import { FileTooLarge } from './FileTooLarge';
 import type { PreviewComponentProps } from './types';
-import { isRemoteUrl, MAX_PREVIEW_SIZE, openFileExternal } from './utils';
+import {
+  isRemoteUrl,
+  MAX_PREVIEW_SIZE,
+  openFileExternal,
+  isTauriEnvironment,
+  readFileViaAPI,
+  statFileViaAPI
+} from './utils';
 
 export function PdfPreview({ artifact }: PreviewComponentProps) {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -33,12 +39,27 @@ export function PdfPreview({ artifact }: PreviewComponentProps) {
       try {
         // Check file size first for local files
         if (!isRemoteUrl(artifact.path)) {
-          const fileInfo = await stat(artifact.path);
-          if (fileInfo.size > MAX_PREVIEW_SIZE) {
-            console.log('[PDF Preview] File too large:', fileInfo.size);
-            setFileTooLarge(fileInfo.size);
-            setLoading(false);
-            return;
+          const useTauri = isTauriEnvironment();
+
+          if (useTauri) {
+            // Use Tauri API
+            const { stat } = await import('@tauri-apps/plugin-fs');
+            const fileInfo = await stat(artifact.path);
+            if (fileInfo.size > MAX_PREVIEW_SIZE) {
+              console.log('[PDF Preview] File too large:', fileInfo.size);
+              setFileTooLarge(fileInfo.size);
+              setLoading(false);
+              return;
+            }
+          } else {
+            // Use API
+            const fileInfo = await statFileViaAPI(artifact.path);
+            if (fileInfo.size > MAX_PREVIEW_SIZE) {
+              console.log('[PDF Preview] File too large:', fileInfo.size);
+              setFileTooLarge(fileInfo.size);
+              setLoading(false);
+              return;
+            }
           }
         }
 
@@ -58,10 +79,21 @@ export function PdfPreview({ artifact }: PreviewComponentProps) {
           }
           blob = await response.blob();
         } else {
-          // Local file - use Tauri fs plugin
-          console.log('[PDF Preview] Reading local PDF file...');
-          const data = await readFile(artifact.path);
-          blob = new Blob([data], { type: 'application/pdf' });
+          // Local file - use appropriate method based on environment
+          const useTauri = isTauriEnvironment();
+
+          if (useTauri) {
+            // Use Tauri fs plugin
+            console.log('[PDF Preview] Reading local PDF file via Tauri...');
+            const { readFile } = await import('@tauri-apps/plugin-fs');
+            const data = await readFile(artifact.path);
+            blob = new Blob([data], { type: 'application/pdf' });
+          } else {
+            // Use API
+            console.log('[PDF Preview] Reading local PDF file via API...');
+            const data = await readFileViaAPI(artifact.path);
+            blob = new Blob([data], { type: 'application/pdf' });
+          }
         }
 
         console.log('[PDF Preview] Loaded', blob.size, 'bytes');

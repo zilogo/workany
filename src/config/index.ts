@@ -17,8 +17,10 @@ export const API_PORT = import.meta.env.PROD ? 2620 : 2026;
 
 /**
  * API base URL
+ * In development, use empty string to leverage Vite proxy
+ * In production, use localhost with specific port
  */
-export const API_BASE_URL = `http://localhost:${API_PORT}`;
+export const API_BASE_URL = import.meta.env.PROD ? `http://localhost:${API_PORT}` : '';
 
 // =============================================================================
 // App Configuration
