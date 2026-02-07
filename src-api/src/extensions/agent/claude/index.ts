@@ -50,7 +50,7 @@ import { loadMcpServers, type McpServerConfig } from '@/shared/mcp/loader';
 // Skills are loaded directly by Claude SDK from ~/.claude/skills/ via settingSources: ['user']
 // No custom loading needed
 // ============================================================================
-// Logging - uses shared logger (writes to ~/.workany/logs/workany.log)
+// Logging - uses shared logger (writes to ~/.karmabox/logs/karmabox.log)
 // ============================================================================
 import { createLogger, LOG_FILE_PATH } from '@/shared/utils/logger';
 
@@ -612,8 +612,8 @@ function getSessionWorkDir(
   console.log('[Claude] Expanded path:', expandedPath);
 
   // Check if the workDir is already a session folder path from frontend
-  // Session paths from frontend look like: ~/.workany/sessions/{sessionId}/task-{xx}
-  // or: ~/.workany/sessions/{sessionId}
+  // Session paths from frontend look like: ~/.karmabox/sessions/{sessionId}/task-{xx}
+  // or: ~/.karmabox/sessions/{sessionId}
   // Support both Unix (/) and Windows (\) path separators
   const hasSessionsPath = expandedPath.includes('/sessions/') || expandedPath.includes('\\sessions\\');
   const endsWithSessions = expandedPath.endsWith('/sessions') || expandedPath.endsWith('\\sessions');

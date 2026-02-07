@@ -20,7 +20,7 @@ import {
   type TaskPlan,
 } from '@/core/agent';
 // ============================================================================
-// Logging - uses shared logger (writes to ~/.workany/logs/workany.log)
+// Logging - uses shared logger (writes to ~/.karmabox/logs/karmabox.log)
 // ============================================================================
 import { createLogger } from '@/shared/utils/logger';
 

@@ -383,6 +383,10 @@ export async function getSettingsAsync(): Promise<Settings> {
             // Skip invalid JSON values
           }
         }
+        // Migration: Update workDir path from .workany to .karmabox
+        if (settings.workDir && settings.workDir.includes('.workany')) {
+          settings.workDir = settings.workDir.replace(/\.workany/g, '.karmabox');
+        }
         // Migration: Remove old built-in providers that are no longer in defaultProviders
         const oldBuiltInProviderIds = [
           'openrouter',
@@ -426,6 +430,10 @@ export async function getSettingsAsync(): Promise<Settings> {
     const stored = localStorage.getItem('workany_settings');
     if (stored) {
       const loadedSettings = { ...defaultSettings, ...JSON.parse(stored) };
+      // Migration: Update workDir path from .workany to .karmabox
+      if (loadedSettings.workDir && loadedSettings.workDir.includes('.workany')) {
+        loadedSettings.workDir = loadedSettings.workDir.replace(/\.workany/g, '.karmabox');
+      }
       // Migration: Remove old built-in providers that are no longer in defaultProviders
       const oldBuiltInProviderIds = [
         'openrouter',
@@ -485,6 +493,10 @@ export function getSettings(): Settings {
     const stored = localStorage.getItem('workany_settings');
     if (stored) {
       const loadedSettings = { ...defaultSettings, ...JSON.parse(stored) };
+      // Migration: Update workDir path from .workany to .karmabox
+      if (loadedSettings.workDir && loadedSettings.workDir.includes('.workany')) {
+        loadedSettings.workDir = loadedSettings.workDir.replace(/\.workany/g, '.karmabox');
+      }
       // Migration: Remove old built-in providers that are no longer in defaultProviders
       const oldBuiltInProviderIds = [
         'openrouter',

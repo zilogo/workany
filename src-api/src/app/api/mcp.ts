@@ -7,10 +7,10 @@ import { getAllMcpConfigPaths } from '../../config/constants';
 
 const mcp = new Hono();
 
-// MCP config file path: ~/.workany/mcp.json
+// MCP config file path: ~/.karmabox/mcp.json
 const getMcpConfigPath = (): string => {
   const homeDir = os.homedir();
-  return path.join(homeDir, '.workany', 'mcp.json');
+  return path.join(homeDir, '.karmabox', 'mcp.json');
 };
 
 // Claude settings file path: ~/.claude/settings.json

@@ -1,7 +1,7 @@
 /**
  * Application Constants
  *
- * Centralized configuration constants for the WorkAny API.
+ * Centralized configuration constants for the KarmaBox API.
  * All hardcoded values should be defined here for easy management.
  */
 
@@ -13,10 +13,10 @@ import { join } from 'path';
 // ============================================================================
 
 /** Application name */
-export const APP_NAME = 'workany';
+export const APP_NAME = 'karmabox';
 
 /** Application data directory name (used in home directory) */
-export const APP_DIR_NAME = '.workany';
+export const APP_DIR_NAME = '.karmabox';
 
 /** Claude Code directory name (system config) */
 export const CLAUDE_DIR_NAME = '.claude';

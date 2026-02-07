@@ -1,7 +1,7 @@
 /**
  * MCP Config Loader
  *
- * Loads MCP server configuration from ~/.workany/mcp.json
+ * Loads MCP server configuration from ~/.karmabox/mcp.json
  */
 
 import fs from 'fs/promises';
@@ -123,7 +123,7 @@ export interface McpConfig {
 }
 
 /**
- * Load MCP servers configuration from ~/.workany/mcp.json
+ * Load MCP servers configuration from ~/.karmabox/mcp.json
  *
  * @param mcpConfig Optional config to control loading
  * @returns Record of server name to config

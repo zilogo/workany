@@ -312,7 +312,7 @@ files.post('/read', async (c) => {
 /**
  * Get all skills directories
  * GET /files/skills-dir
- * Returns paths for both ~/.workany/skills and ~/.claude/skills
+ * Returns paths for both ~/.karmabox/skills and ~/.claude/skills
  */
 files.get('/skills-dir', async (c) => {
   const skillsDirs = getAllSkillsDirs();

@@ -1,7 +1,7 @@
 /**
  * Path utilities for KarmaBox
  *
- * Uses ~/.workany/ as the standard data directory across all platforms.
+ * Uses ~/.karmabox/ as the standard data directory across all platforms.
  * This follows the Unix dotfile convention used by developer tools like:
  * - ~/.claude/ (Claude Code)
  * - ~/.npm/ (npm)
@@ -81,7 +81,7 @@ export async function getWorkanyMcpPath(): Promise<string> {
 
 /**
  * Get the application data directory
- * Returns ~/.workany on all platforms (using correct path separator)
+ * Returns ~/.karmabox on all platforms (using correct path separator)
  */
 export async function getAppDataDir(): Promise<string> {
   if (cachedAppDataDir) {
@@ -96,7 +96,7 @@ export async function getAppDataDir(): Promise<string> {
       // Remove trailing slash/backslash if present
       const homeClean =
         home.endsWith('/') || home.endsWith('\\') ? home.slice(0, -1) : home;
-      cachedAppDataDir = `${homeClean}${separator}.workany`;
+      cachedAppDataDir = `${homeClean}${separator}.karmabox`;
       return cachedAppDataDir;
     } catch (error) {
       console.warn('[Paths] Failed to get home dir:', error);
@@ -104,7 +104,7 @@ export async function getAppDataDir(): Promise<string> {
   }
 
   // Fallback for browser mode
-  cachedAppDataDir = '~/.workany';
+  cachedAppDataDir = '~/.karmabox';
   return cachedAppDataDir;
 }
 
@@ -183,7 +183,7 @@ export async function expandPath(path: string): Promise<string> {
 export async function getLogPath(): Promise<string> {
   const appDir = await getAppDataDir();
   const sep = await getPathSeparator();
-  return `${appDir}${sep}logs${sep}workany.log`;
+  return `${appDir}${sep}logs${sep}karmabox.log`;
 }
 
 /**
