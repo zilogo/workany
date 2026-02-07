@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "WorkAny",
+  "productName": "KarmaBox",
   "version": "0.1.16",
   "identifier": "ai.thinkany.workany",
   "build": {

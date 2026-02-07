@@ -14,8 +14,7 @@ export type SettingsCategory =
   | 'mcp'
   | 'skills'
   | 'connector'
-  | 'data'
-  | 'about';
+  | 'data';
 
 // Common props for settings tabs
 export interface SettingsTabProps {

@@ -1,5 +1,5 @@
 /**
- * Path utilities for WorkAny
+ * Path utilities for KarmaBox
  *
  * Uses ~/.workany/ as the standard data directory across all platforms.
  * This follows the Unix dotfile convention used by developer tools like:
@@ -71,7 +71,7 @@ export async function getClaudeSkillsDir(): Promise<string> {
 }
 
 /**
- * Get the WorkAny MCP config path (platform-aware)
+ * Get the KarmaBox MCP config path (platform-aware)
  */
 export async function getWorkanyMcpPath(): Promise<string> {
   const appDir = await getAppDataDir();

@@ -29,7 +29,7 @@ export const API_BASE_URL = import.meta.env.PROD ? `http://localhost:${API_PORT}
 /**
  * App name
  */
-export const APP_NAME = 'WorkAny';
+export const APP_NAME = 'KarmaBox';
 
 /**
  * App identifier (must match tauri.conf.json)
