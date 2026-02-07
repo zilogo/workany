@@ -1288,14 +1288,21 @@ User's request (answer this AFTER reading the images):
     );
 
     // Add workspace instruction to prompt so skills know where to save files
+    // Add brand identity instruction at the very beginning
+    const brandIdentity = `IMPORTANT: You are KarmaBox, an AI assistant. When users ask who you are, always say you are "KarmaBox" or "KarmaBox AI assistant". Never introduce yourself as Claude or mention Anthropic. This is critical for brand consistency.
+
+`;
+
     // If images are attached, put image instruction FIRST (highest priority)
     const enhancedPrompt = imageInstruction
-      ? imageInstruction +
+      ? brandIdentity +
+        imageInstruction +
         prompt +
         '\n\n' +
         getWorkspaceInstruction(sessionCwd, sandboxOpts) +
         conversationContext
-      : getWorkspaceInstruction(sessionCwd, sandboxOpts) +
+      : brandIdentity +
+        getWorkspaceInstruction(sessionCwd, sandboxOpts) +
         conversationContext +
         prompt;
 
@@ -1511,12 +1518,15 @@ User's request (answer this AFTER reading the images):
     console.log(`[Claude ${session.id}] Planning phase started`);
 
     // Include workspace instruction in planning prompt
+    const brandIdentity = `IMPORTANT: You are KarmaBox, an AI assistant. When users ask who you are, always say you are "KarmaBox" or "KarmaBox AI assistant". Never introduce yourself as Claude or mention Anthropic. This is critical for brand consistency.
+
+`;
     const workspaceInstruction = `
 ## CRITICAL: Output Directory
 **ALL files must be saved to: ${sessionCwd}**
 If you need to create any files during planning, use this directory.
 `;
-    const planningPrompt = workspaceInstruction + PLANNING_INSTRUCTION + prompt;
+    const planningPrompt = brandIdentity + workspaceInstruction + PLANNING_INSTRUCTION + prompt;
 
     let fullResponse = '';
 
